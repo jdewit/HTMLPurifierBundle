@@ -8,7 +8,8 @@
         <parameter key="exercise_html_purifier.config.class">HTMLPurifier_Config</parameter>
         <parameter key="exercise_html_purifier.cache_warmer.serializer.class">Exercise\HTMLPurifierBundle\CacheWarmer\SerializerCacheWarmer</parameter>
         <parameter key="exercise_html_purifier.twig_extension.class">Exercise\HTMLPurifierBundle\Twig\HTMLPurifierExtension</parameter>
-
+        <parameter key="exercise_html_purifier.text_type.class">Exercise\HTMLPurifierBundle\Form\Type\PurifiedTextType</parameter>
+        <parameter key="exercise_html_purifier.textarea_type.class">Exercise\HTMLPurifierBundle\Form\Type\PurifiedTextAreaType</parameter>
         <parameter key="exercise_html_purifier.cache_warmer.serializer.paths" type="collection" />
     </parameters>
 
@@ -21,6 +22,20 @@
         <service id="exercise_html_purifier.twig_extension" class="%exercise_html_purifier.twig_extension.class%">
             <argument type="service" id="service_container" />
             <tag name="twig.extension" />
+        </service>
+
+        <service id="exercise_html_purifier.form.type.purified_text" class="%exercise_html_purifier.text_type.class%">
+            <argument type="service" id="exercise_html_purifier.form.transformer.html_purifier" />
+            <tag name="form.type" alias="purified_text" />
+        </service>
+
+        <service id="exercise_html_purifier.form.type.purified_textarea" class="%exercise_html_purifier.textarea_type.class%">
+            <argument type="service" id="exercise_html_purifier.form.transformer.html_purifier" />
+            <tag name="form.type" alias="purified_textarea" />
+        </service>
+
+        <service id="exercise_html_purifier.form.transformer.html_purifier" class="Exercise\HTMLPurifierBundle\Form\HTMLPurifierTransformer">
+            <argument type="service" id="exercise_html_purifier.default" />
         </service>
     </services>
 </container>
