@@ -101,66 +101,41 @@ This bundles provides a data transformer class for filtering form fields with
 HTMLPurifier. Purification is done during the `reverseTransform()` method, which
 means that client data will be filtered during binding to the form.
 
-The following example demonstrates one possible way to integrate an HTMLPurifier
-transformer into a form by way of a custom field type:
+## Form Types
+The bundle contains two custom form types (text and textarea) that implement the HTMLPurifier
+transformer. See the cookbook entry on <a href="http://symfony.com/doc/current/cookbook/form/create_custom_field_type.html">Custom Form Types</a>.
+You can use them like any other form type.
 
-``` php
+```php
 <?php
-
-namespace Acme\MainBundle\Form\Type;
+namespace Acme\DemoBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class PurifiedTextareaType extends AbstractType
+class TestFormType extends AbstractType
 {
-    private $purifierTransformer;
-
-    public function __construct(DataTransformerInterface $purifierTransformer)
-    {
-        $this->purifierTransformer = $purifierTransformer;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->appendClientTransformer($this->purifierTransformer);
-    }
-
-    public function getParent()
-    {
-        return 'textarea';
+        $builder
+            ->add('title', 'purified_text')
+            ->add('content', 'purified_textarea')
+        ;
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'compound' => false,
+            'data_class' => 'Acme\DemoBundle\Entity\Test'
         ));
     }
 
     public function getName()
     {
-        return 'purified_textarea';
+        return 'acme_demo_test';
     }
 }
-```
-
-Additionally, we can define both the field type and transformer in the service
-container:
-
-``` xml
-<services>
-    <service id="acme.form.type.purified_textarea" class="Acme\MainBundle\Form\Type\PurifiedTextareaType">
-        <argument type="service" id="acme.form.transformer.html_purifier" />
-        <tag name="form.type" alias="purified_textarea" />
-    </service>
-
-    <service id="acme.form.transformer.html_purifier" class="Exercise\HTMLPurifierBundle\Form\HTMLPurifierTransformer">
-        <argument type="service" id="exercise_html_purifier.default" />
-    </service>
-</services>
 ```
 
 Additional documentation on data transformers may be found in the
