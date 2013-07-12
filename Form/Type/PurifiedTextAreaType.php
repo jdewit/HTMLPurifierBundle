@@ -3,8 +3,9 @@
 namespace Exercise\HTMLPurifierBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\DataTransformerInterface;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class PurifiedTextareaType extends AbstractType
 {
@@ -17,12 +18,19 @@ class PurifiedTextareaType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->addModelTransformer($this->purifierTransformer);
+        $builder->addViewTransformer($this->purifierTransformer);
     }
 
     public function getParent()
     {
         return 'textarea';
+    }
+
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(array(
+            'compound' => false,
+        ));
     }
 
     public function getName()
