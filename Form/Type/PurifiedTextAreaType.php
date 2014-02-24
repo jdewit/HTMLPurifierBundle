@@ -7,7 +7,7 @@ use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class PurifiedTextareaType extends AbstractType
+class PurifiedTextAreaType extends AbstractType
 {
     private $purifierTransformer;
 
